@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arvin — CX & Product Design Leader</title>
+<style>
+@font-face { font-family: 'Sofia Pro'; src: url('fonts/SofiaPro-Regular.otf') format('opentype'); font-weight: 400; }
+@font-face { font-family: 'Sofia Pro'; src: url('fonts/SofiaPro-Bold.otf') format('opentype'); font-weight: 700; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-Light.ttf') format('truetype'); font-weight: 300; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-Regular.ttf') format('truetype'); font-weight: 400; }
+@font-face { font-family: 'Founders Grotesk Mono'; src: url('fonts/TestFoundersGroteskMono-Regular.otf') format('opentype'); font-weight: 400; }
+@font-face { font-family: 'Founders Grotesk Mono'; src: url('fonts/TestFoundersGroteskMono-Light.otf') format('opentype'); font-weight: 300; }
+
+:root {
+  --color-white: #FFFFFF;
+  --color-light-gray: #F1F1F1;
+  --color-charcoal: #312F32;
+  --color-ivory: #FFFEF2;
+  --color-lime: #7AE04D;
+  --font-display: 'Sofia Pro', sans-serif;
+  --font-body: 'Lato', sans-serif;
+  --font-mono: 'Founders Grotesk Mono', monospace;
+  --ease-out: cubic-bezier(0.16,1,0.3,1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-ivory);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+/* Subtle grid texture on background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(49,47,50,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(49,47,50,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.card-wrapper {
+  position: relative;
+  width: 420px;
+  max-width: 100%;
+}
+
+/* Lanyard ribbon */
+.ribbon {
+  width: 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 100%;
+  height: 100vh;
+  background: linear-gradient(
+    to bottom,
+    rgba(49,47,50,0) 0%,
+    rgba(49,47,50,0.18) 20%,
+    rgba(49,47,50,0.22) 45%,
+    rgba(122,224,77,0.35) 50%,
+    rgba(49,47,50,0.22) 55%,
+    rgba(49,47,50,0.18) 80%,
+    rgba(49,47,50,0.28) 100%
+  );
+  border-left: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Lanyard clip */
+.clip {
+  width: 48px;
+  height: 20px;
+  background: rgba(49,47,50,0.15);
+  border: 1px solid rgba(49,47,50,0.2);
+  border-radius: 4px 4px 0 0;
+  margin: 0 auto;
+  position: relative;
+  backdrop-filter: blur(4px);
+}
+.clip::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 8px;
+  background: rgba(49,47,50,0.25);
+  border-radius: 2px;
+}
+
+/* Main card */
+.card {
+  background: var(--color-charcoal);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.08) inset,
+    0 40px 80px rgba(49,47,50,0.35),
+    0 8px 24px rgba(49,47,50,0.2);
+}
+
+/* Texture overlay */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Shape decorations */
+.shape-bg {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.shape-1 {
+  width: 280px;
+  height: 280px;
+  top: -80px;
+  right: -80px;
+  opacity: 0.06;
+}
+.shape-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -40px;
+  left: -60px;
+  opacity: 0.08;
+  transform: rotate(45deg);
+}
+
+.card-inner {
+  position: relative;
+  z-index: 2;
+  padding: 28px 30px 32px;
+}
+
+/* Header row */
+.card-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.access-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: var(--color-lime);
+  text-transform: uppercase;
+  padding: 3px 0 0;
+}
+
+.card-id {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.45);
+  text-align: right;
+  line-height: 1.8;
+}
+
+/* Divider */
+.rule {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin-bottom: 20px;
+}
+
+/* Meta fields */
+.meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-bottom: 16px;
+}
+.meta-field {
+  padding: 0 0 14px 0;
+}
+.meta-field:nth-child(odd) {
+  padding-right: 24px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.meta-field:nth-child(even) {
+  padding-left: 24px;
+}
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 4px;
+}
+.meta-value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.5;
+}
+
+/* Name block */
+.name-block {
+  margin-bottom: 20px;
+}
+.name-display {
+  font-family: var(--font-display);
+  font-size: 31px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-white);
+  line-height: 1;
+  text-transform: uppercase;
+  padding: 4px 0 0;
+  white-space: nowrap;
+}
+
+/* Bio / descriptor */
+.bio-section {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 18px;
+  margin-bottom: 20px;
+}
+.bio-text {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.75;
+  letter-spacing: 0.3px;
+  text-wrap: pretty;
+}
+.bio-text + .bio-text {
+  margin-top: 10px;
+}
+
+/* Specialisms row */
+.spec-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 12px;
+}
+.spec-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(122,224,77,0.7);
+  border: 1px solid rgba(122,224,77,0.2);
+  border-radius: 2px;
+  padding: 4px 8px;
+}
+
+/* Footer */
+.card-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 14px;
+  margin-top: 16px;
+}
+.footer-org {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.footer-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+.footer-org-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: -0.01em;
+}
+
+/* Envelope mark */
+.envelope-mark {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+.envelope-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Entry animation */
+.card-wrapper {
+  animation: rise 0.7s var(--ease-out) both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div class="card-wrapper">
+  <div class="ribbon" style="width:50px"></div>
+  <div class="clip" style="width:60px"></div>
+
+  <div class="card">
+    <div class="shape-bg shape-1">
+      <img src="assets/shapes/Shape 114.svg" style="width:100%;height:100%;filter:invert(1);" alt="">
+    </div>
+    <div class="shape-bg shape-2">
+      <img src="assets/shapes/Shape 061.svg" style="width:100%;height:100%;filter:invert(1);" alt="">
+    </div>
+
+    <div class="card-inner">
+
+      <div class="card-header">
+        <div class="access-label">FULL-STACK<br>CX/UI/UX</div>
+        <div class="card-id">
+          KUL / SIN / JKT / OSL<br>
+          2026 — ACTIVE
+        </div>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="meta-grid">
+        <div class="meta-field">
+          <div class="meta-label">Based in</div>
+          <div class="meta-value">Kuala Lumpur<br>Malaysia</div>
+        </div>
+        <div class="meta-field">
+          <div class="meta-label">Currently at</div>
+          <div class="meta-value">PNB<br>Head of CX</div>
+        </div>
+        <div class="meta-field">
+          <div class="meta-label">Discipline</div>
+          <div class="meta-value">Research<br>Design<br>Strategy</div>
+        </div>
+        <div class="meta-field">
+          <div class="meta-label">Markets</div>
+          <div class="meta-value">MY · SG<br>ID · NO</div>
+        </div>
+      </div>
+
+      <div class="name-block">
+        <div class="name-display">ARVIN - DESIGN LEADER</div>
+      </div>
+
+      <div class="bio-section">
+        <p class="bio-text">I design products & services. I build teams that design products & services. I create operating models that large organisations use to design better products and services.</p>
+        <p class="bio-text">From pre-seeded startups to national institutions — fintech, investment management, digital banking, commerce, and payments.</p>
+      </div>
+
+      <div class="spec-row">
+        <span class="spec-tag">CX Strategy</span>
+        <span class="spec-tag">Product Design</span>
+        <span class="spec-tag">Design Ops</span>
+        <span class="spec-tag">Fintech</span>
+        <span class="spec-tag">Service Design</span>
+        <span class="spec-tag">Mentor</span>
+      </div>
+
+      <div class="card-footer">
+        <div class="footer-org">
+          <div class="footer-role">Current position</div>
+          <div class="footer-org-name">Permodalan Nasional Berhad</div>
+        </div>
+        <div class="envelope-mark">
+          <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="11" width="36" height="24" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+            <polyline points="4,11 22,27 40,11" stroke="rgba(122,224,77,0.6)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+            <line x1="4" y1="35" x2="16" y2="23" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="40" y1="35" x2="28" y2="23" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
