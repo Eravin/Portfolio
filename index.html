@@ -61,20 +61,15 @@ body::before {
   z-index: 1;
 }
 
-/* Lanyard — only shown for hero card */
+/* Lanyard — always visible */
 .deck-lanyard {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   flex-shrink: 0;
-  transition: opacity 0.3s ease, height 0.4s var(--ease-out);
-  height: 168px; /* ribbon + clip */
+  height: 168px;
   overflow: hidden;
-}
-.deck-lanyard.hidden {
-  opacity: 0;
-  height: 48px; /* collapsed to just a breathing space */
 }
 
 .ribbon {
@@ -118,9 +113,21 @@ body::before {
   position: relative;
   width: 100%;
   transition: height 0.45s var(--ease-out);
-  /* Clip vertical overflow (behind-card content) while allowing
-     horizontal overflow for exit slide animations */
-  clip-path: inset(0px -100vw 0px -100vw);
+  /* Allow 80px below for active card box-shadow; side overflow for exit animations */
+  clip-path: inset(0px -100vw -80px -100vw);
+}
+
+/* Gradient mask that fades behind-card bleed in the shadow zone to ivory */
+.deck-stack::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  left: -40px;
+  right: -40px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent 0%, var(--color-ivory) 55%);
+  pointer-events: none;
+  z-index: 11; /* above behind-cards (z:8,9) and active card (z:10); positioned below active card bottom so it never covers card content */
 }
 
 /* All cards sit in the stack */
@@ -149,13 +156,13 @@ body::before {
 .deck-card.s-right-1 {
   z-index: 9;
   transform: translateX(14px) scale(0.97);
-  opacity: 0.28;
+  opacity: 0.22;
   pointer-events: none;
 }
 .deck-card.s-right-2 {
   z-index: 8;
   transform: translateX(24px) scale(0.94);
-  opacity: 0.13;
+  opacity: 0.10;
   pointer-events: none;
 }
 
@@ -163,13 +170,13 @@ body::before {
 .deck-card.s-left-1 {
   z-index: 9;
   transform: translateX(-14px) scale(0.97);
-  opacity: 0.28;
+  opacity: 0.22;
   pointer-events: none;
 }
 .deck-card.s-left-2 {
   z-index: 8;
   transform: translateX(-24px) scale(0.94);
-  opacity: 0.13;
+  opacity: 0.10;
   pointer-events: none;
 }
 
@@ -767,7 +774,6 @@ body::before {
   let isAnimating = false;
 
   const stack   = document.getElementById('deck-stack');
-  const lanyard = document.getElementById('deck-lanyard');
   const counter = document.getElementById('deck-counter');
   const btnPrev = document.getElementById('btn-prev');
   const btnNext = document.getElementById('btn-next');
@@ -799,15 +805,11 @@ body::before {
   function setContainerHeight(cardIndex) {
     const card = cards[cardIndex];
     const h = card.getBoundingClientRect().height || card.scrollHeight;
-    stack.style.height = (h + PEEK) + 'px';
+    stack.style.height = h + 'px';
   }
 
   function updateCounter(idx) {
     counter.textContent = (idx + 1) + ' / ' + TOTAL;
-  }
-
-  function updateLanyard(idx) {
-    lanyard.classList.toggle('hidden', idx !== 0);
   }
 
   function applyAllStates(activeIdx) {
@@ -817,7 +819,6 @@ body::before {
     });
     setContainerHeight(activeIdx);
     updateCounter(activeIdx);
-    updateLanyard(activeIdx);
   }
 
   /* ── Navigate ── */
@@ -844,7 +845,6 @@ body::before {
     // Resize container to incoming card
     setContainerHeight(newIndex);
     updateCounter(newIndex);
-    updateLanyard(newIndex);
 
     // After exit animation, reset exited card to hidden
     setTimeout(() => {
