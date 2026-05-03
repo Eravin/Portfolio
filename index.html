@@ -118,7 +118,9 @@ body::before {
   position: relative;
   width: 100%;
   transition: height 0.45s var(--ease-out);
-  /* height set by JS */
+  /* Clip vertical overflow (behind-card content) while allowing
+     horizontal overflow for exit slide animations */
+  clip-path: inset(0px -100vw 0px -100vw);
 }
 
 /* All cards sit in the stack */
@@ -126,7 +128,7 @@ body::before {
   position: absolute;
   top: 0; left: 0;
   width: 100%;
-  transform-origin: bottom center;
+  transform-origin: center top;
   transition:
     transform 0.45s var(--ease-out),
     opacity 0.35s ease;
@@ -138,25 +140,42 @@ body::before {
 /* ── Deck states ── */
 .deck-card.s-active {
   z-index: 10;
-  transform: translateY(0) scale(1);
+  transform: translateX(0) translateY(0) rotate(0deg) scale(1);
   opacity: 1;
   cursor: default;
 }
-.deck-card.s-behind-1 {
+
+/* Cards ahead → peek from the right */
+.deck-card.s-right-1 {
   z-index: 9;
-  transform: translateY(4px) scale(0.985);
-  opacity: 0.12;
+  transform: translateX(14px) scale(0.97);
+  opacity: 0.28;
   pointer-events: none;
 }
-.deck-card.s-behind-2 {
+.deck-card.s-right-2 {
   z-index: 8;
-  transform: translateY(7px) scale(0.97);
-  opacity: 0.06;
+  transform: translateX(24px) scale(0.94);
+  opacity: 0.13;
   pointer-events: none;
 }
+
+/* Cards already seen → peek from the left */
+.deck-card.s-left-1 {
+  z-index: 9;
+  transform: translateX(-14px) scale(0.97);
+  opacity: 0.28;
+  pointer-events: none;
+}
+.deck-card.s-left-2 {
+  z-index: 8;
+  transform: translateX(-24px) scale(0.94);
+  opacity: 0.13;
+  pointer-events: none;
+}
+
 .deck-card.s-hidden {
   z-index: 0;
-  transform: translateY(10px) scale(0.955);
+  transform: translateX(0) scale(0.92);
   opacity: 0;
   pointer-events: none;
 }
@@ -741,7 +760,7 @@ body::before {
 <script>
 (function () {
   const TOTAL = 6;
-  const PEEK  = 5; // px below active card for stack peek
+  const PEEK  = 0; // no bottom overflow — side peek only
   const EXIT_DURATION = 400; // ms
 
   let current    = 0;
@@ -756,15 +775,25 @@ body::before {
 
   /* ── State helpers ── */
   function stateFor(cardIndex, activeIndex) {
-    const diff = (cardIndex - activeIndex + TOTAL) % TOTAL;
-    if (diff === 0) return 's-active';
-    if (diff === 1) return 's-behind-1';
-    if (diff === 2) return 's-behind-2';
+    if (cardIndex === activeIndex) return 's-active';
+    const fwd = (cardIndex - activeIndex + TOTAL) % TOTAL; // steps ahead
+    const bwd = (activeIndex - cardIndex + TOTAL) % TOTAL; // steps behind
+    // Cards ahead → right; cards behind → left
+    if (fwd <= bwd) {
+      if (fwd === 1) return 's-right-1';
+      if (fwd === 2) return 's-right-2';
+    } else {
+      if (bwd === 1) return 's-left-1';
+      if (bwd === 2) return 's-left-2';
+    }
     return 's-hidden';
   }
 
   function clearStates(card) {
-    card.classList.remove('s-active', 's-behind-1', 's-behind-2', 's-hidden', 's-exit-left', 's-exit-right');
+    card.classList.remove(
+      's-active', 's-right-1', 's-right-2', 's-left-1', 's-left-2',
+      's-hidden', 's-exit-left', 's-exit-right'
+    );
   }
 
   function setContainerHeight(cardIndex) {
