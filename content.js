@@ -68,8 +68,8 @@ const CARDS = [
     name: 'Head of Customer Experience',
     nameClass: 'name-display-job',
     bio: [
-      'Created from scratch — built the CX function with a mandate to professionalise experience as a strategic capability within a large government-linked financial institution, establishing governance, measurement, and cross-departmental ownership.',
-      "Established Malaysia's investment fund industry-leading NPS of 66 and the first consolidated cross-channel CSAT framework — a unified baseline of 88.56% across digital, branch, and call centre channels.",
+      'Built the CX function from scratch — establishing governance, cross-channel measurement, and departmental ownership of experience as a strategic capability within a large government-linked financial institution.',
+      "Delivered industry-leading NPS of 66 and the first consolidated CSAT baseline of 88.56% across digital, branch, and call centre — the highest in the Malaysian investment fund industry.",
     ],
     tags: ['CX Strategy', 'Governance', 'VoC', 'NPS · CSAT', 'National Institution'],
   },

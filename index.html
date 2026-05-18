@@ -213,6 +213,7 @@ body::before {
   border-radius: 16px;
   overflow: hidden;
   position: relative;
+  height: 650px; /* fixed height — all cards uniform */
   box-shadow:
     0 2px 0 rgba(255,255,255,0.08) inset,
     0 40px 80px rgba(49,47,50,0.3),
@@ -235,6 +236,10 @@ body::before {
   position: relative;
   z-index: 2;
   padding: 28px 30px 32px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .card-header {
@@ -274,6 +279,7 @@ body::before {
   grid-template-columns: 1fr 1fr;
   gap: 0;
   margin-bottom: 16px;
+  flex-shrink: 0;
 }
 .meta-field { padding: 0 0 14px; }
 .meta-field:nth-child(odd)  { padding-right: 24px; border-right: 1px solid rgba(255,255,255,0.06); }
@@ -316,7 +322,7 @@ body::before {
   opacity: 0.65;
 }
 
-.name-block { margin-bottom: 20px; }
+.name-block { margin-bottom: 20px; flex-shrink: 0; }
 .name-display {
   font-family: var(--font-display);
   font-size: 31px;
@@ -342,7 +348,20 @@ body::before {
 .bio-section {
   border-top: 1px solid rgba(255,255,255,0.08);
   padding-top: 18px;
-  margin-bottom: 20px;
+  /* flex: grow to fill remaining height, clip gracefully */
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+/* Gradient fade so clipped bio text dissolves rather than hard-cuts */
+.bio-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 32px;
+  background: linear-gradient(transparent, var(--color-charcoal));
+  pointer-events: none;
 }
 .bio-text {
   font-family: var(--font-body);
@@ -355,7 +374,8 @@ body::before {
 }
 .bio-text + .bio-text { margin-top: 10px; }
 
-.spec-row { display: flex; flex-wrap: wrap; gap: 5px; }
+/* Tags always pinned to the bottom of the card */
+.spec-row { display: flex; flex-wrap: wrap; gap: 5px; flex-shrink: 0; padding-top: 16px; }
 .spec-tag {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -519,10 +539,9 @@ body::before {
     );
   }
 
-  function setContainerHeight(cardIndex) {
-    const card = cards[cardIndex];
-    const h = card.getBoundingClientRect().height || card.scrollHeight;
-    stack.style.height = h + 'px';
+  function setContainerHeight() {
+    // All cards are a fixed 650px — set once
+    stack.style.height = '650px';
   }
 
   function updateCounter(idx) {
@@ -534,7 +553,7 @@ body::before {
       clearStates(card);
       card.classList.add(stateFor(i, activeIdx));
     });
-    setContainerHeight(activeIdx);
+    setContainerHeight();
     updateCounter(activeIdx);
   }
 
@@ -560,7 +579,7 @@ body::before {
     });
 
     // Resize container to incoming card
-    setContainerHeight(newIndex);
+    setContainerHeight();
     updateCounter(newIndex);
 
     // After exit animation, reset exited card to hidden
@@ -619,7 +638,7 @@ body::before {
     }, 50);
   });
 
-  window.addEventListener('resize', () => setContainerHeight(current));
+  window.addEventListener('resize', () => setContainerHeight());
 })();
 </script>
 </body>
