@@ -41,7 +41,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 26px 86px;
+  padding: 160px 26px 86px;
   overflow-x: hidden;
 }
 
@@ -68,15 +68,20 @@ body::before {
   z-index: 1;
 }
 
-/* Lanyard — always visible */
+/* Lanyard — fixed to viewport top, centred horizontally */
 .deck-lanyard {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  flex-shrink: 0;
+  width: 120px;
   height: 181px;
-  overflow: hidden;
+  overflow: visible;
+  pointer-events: none;
 }
 
 .ribbon {
@@ -220,7 +225,7 @@ body::before {
   border-radius: 17px;
   overflow: hidden;
   position: relative;
-  height: 734px; /* fixed height — all cards uniform */
+  height: 620px; /* fixed height — all cards uniform */
   box-shadow:
     0 2px 0 rgba(255,255,255,0.08) inset,
     0 40px 80px rgba(49,47,50,0.3),
@@ -449,13 +454,13 @@ body::before {
 </head>
 <body>
 
-<div class="deck-area">
+<!-- Lanyard — fixed to viewport top, always centred -->
+<div class="deck-lanyard" id="deck-lanyard">
+  <div class="ribbon"></div>
+  <div class="clip"></div>
+</div>
 
-  <!-- Lanyard (visible for hero card only, hidden by JS for others) -->
-  <div class="deck-lanyard" id="deck-lanyard">
-    <div class="ribbon"></div>
-    <div class="clip"></div>
-  </div>
+<div class="deck-area">
 
   <!-- ── Card stack — populated from content.js ── -->
   <div class="deck-stack" id="deck-stack"></div><!-- /deck-stack -->
@@ -547,8 +552,8 @@ body::before {
   }
 
   function setContainerHeight() {
-    // All cards are a fixed 734px — set once
-    stack.style.height = '734px';
+    // All cards are a fixed 620px — set once
+    stack.style.height = '620px';
   }
 
   function updateCounter(idx) {
