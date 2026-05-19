@@ -40,8 +40,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 160px 26px 86px;
+  justify-content: flex-start;
+  padding: 181px 26px 80px;
   overflow-x: hidden;
 }
 
@@ -225,7 +225,7 @@ body::before {
   border-radius: 17px;
   overflow: hidden;
   position: relative;
-  height: 620px; /* fixed height — all cards uniform */
+  height: clamp(580px, calc(100vh - 320px), 735px); /* scales with viewport, capped */
   box-shadow:
     0 2px 0 rgba(255,255,255,0.08) inset,
     0 40px 80px rgba(49,47,50,0.3),
@@ -552,8 +552,9 @@ body::before {
   }
 
   function setContainerHeight() {
-    // All cards are a fixed 620px — set once
-    stack.style.height = '620px';
+    // Mirror the CSS clamp so the stack wrapper matches the active card
+    const h = Math.min(735, Math.max(580, window.innerHeight - 320));
+    stack.style.height = h + 'px';
   }
 
   function updateCounter(idx) {
