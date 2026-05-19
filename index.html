@@ -85,7 +85,7 @@ body::before {
 }
 
 .ribbon {
-  width: 59px;
+  width: 62px;
   flex: 1;
   background: linear-gradient(
     to bottom,
@@ -560,6 +560,11 @@ body::before {
     counter.textContent = (idx + 1) + ' / ' + TOTAL;
   }
 
+  const lanyard = document.getElementById('deck-lanyard');
+  function updateLanyardAccent(idx) {
+    lanyard.style.setProperty('--accent', CARDS[idx].accent);
+  }
+
   function applyAllStates(activeIdx) {
     cards.forEach((card, i) => {
       clearStates(card);
@@ -567,6 +572,7 @@ body::before {
     });
     setContainerHeight();
     updateCounter(activeIdx);
+    updateLanyardAccent(activeIdx);
   }
 
   /* ── Navigate ── */
@@ -593,6 +599,7 @@ body::before {
     // Resize container to incoming card
     setContainerHeight();
     updateCounter(newIndex);
+    updateLanyardAccent(newIndex);
 
     // After exit animation, reset exited card to hidden
     setTimeout(() => {
